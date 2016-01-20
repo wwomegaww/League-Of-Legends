@@ -527,7 +527,7 @@ namespace AutoSpellUp
                     AbilitySequence = new[] { 3, 2, 1, 1, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
                     break;
                 case "TwistedFate":
-                    if (Player.FlatMagicDamageMod > 0)
+                    if (Player.TotalMagicalDamage > 0)
                     {
                         AbilitySequence = new[] { 1, 3, 1, 2, 1, 4, 1, 3, 1, 3, 4, 3, 3, 2, 2, 4, 2, 2 };
                         Tipo = " AP";
@@ -651,30 +651,56 @@ namespace AutoSpellUp
                     break;
             }
 
-            Game.OnUpdate += Game_OnUpdate;
+            Game.OnTick += Game_OnTick;
         }
 
-        private static void Game_OnUpdate(EventArgs args)
+        private static void Game_OnTick(EventArgs args)
         {
-            var qL = Player.Spellbook.GetSpell(SpellSlot.Q).Level + QOff;
-            var wL = Player.Spellbook.GetSpell(SpellSlot.W).Level + WOff;
-            var eL = Player.Spellbook.GetSpell(SpellSlot.E).Level + EOff;
-            var rL = Player.Spellbook.GetSpell(SpellSlot.R).Level + ROff;
-
-            if (qL + wL + eL + rL >= ObjectManager.Player.Level)
+            try
             {
-                return;
-            }
+                var qL = Player.Spellbook.GetSpell(SpellSlot.Q).Level + QOff;
+                var wL = Player.Spellbook.GetSpell(SpellSlot.W).Level + WOff;
+                var eL = Player.Spellbook.GetSpell(SpellSlot.E).Level + EOff;
+                var rL = Player.Spellbook.GetSpell(SpellSlot.R).Level + ROff;
 
-            var level = new[] { 0, 0, 0, 0 };
-            for (var i = 0; i < ObjectManager.Player.Level; i++)
-            {
-                level[AbilitySequence[i] - 1] = level[AbilitySequence[i] - 1] + 1;
+                if (qL + wL + eL + rL >= ObjectManager.Player.Level)
+                {
+                    return;
+                }
+
+                var level = new[] { 0, 0, 0, 0 };
+
+                for (var i = 0; i < ObjectManager.Player.Level; i++)
+                {
+                    level[AbilitySequence[i] - 1] += 1;
+                }
+
+                EloBuddy.SDK.Core.DelayAction(() =>
+                {
+                    if (qL <= level[0]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.Q);
+                }, new Random().Next(1000));
+
+                EloBuddy.SDK.Core.DelayAction(() =>
+                {
+                    if (wL <= level[1]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.W);
+                }, new Random().Next(1000));
+
+                EloBuddy.SDK.Core.DelayAction(() =>
+                {
+                    if (eL <= level[2]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.E);
+
+                }, new Random().Next(1000));
+
+                EloBuddy.SDK.Core.DelayAction(() =>
+                {
+                    if (rL <= level[3]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.R);
+
+                }, new Random().Next(1000));
             }
-            if (qL < level[0]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.Q);
-            if (wL < level[1]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.W);
-            if (eL < level[2]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.E);
-            if (rL < level[3]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.R);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
