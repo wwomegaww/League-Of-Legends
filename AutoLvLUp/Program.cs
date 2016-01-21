@@ -1,3 +1,6 @@
+using System.Threading;
+using EloBuddy.SDK.Menu.Values;
+
 namespace AutoSpellUp
 {
     using System;
@@ -22,14 +25,17 @@ namespace AutoSpellUp
 
         public static Menu Menu;
 
+        public static int[] Level = {0, 0, 0, 0};
+
         public static AIHeroClient Player
         {
-            get
-            {
-                return ObjectManager.Player;
-            }
+            get { return EloBuddy.Player.Instance; }
         }
 
+        public static int Delay
+        {
+            get { return Menu["delay"].Cast<Slider>().CurrentValue; }
+        }
 
         private static void Main()
         {
@@ -42,9 +48,12 @@ namespace AutoSpellUp
 
             Menu.AddGroupLabel("Dakota's and KarmaPanda's Auto Level Up");
             Menu.AddLabel(Player.ChampionName + " loaded. Credits to Dakota and KarmaPanda.");
+            Menu.Add("delay", new Slider("Maximum Randomize Delay Value", 1000, 0, 10000));
 
             var heal = EloBuddy.Player.Spells.FirstOrDefault(o => o.SData.Name == "summonerHeal");
             var smite = EloBuddy.Player.Spells.FirstOrDefault(o => o.SData.Name == "summonerSmite");
+
+            #region Champion Ability Sequences
 
             switch (Player.ChampionName)
             {
@@ -651,6 +660,8 @@ namespace AutoSpellUp
                     break;
             }
 
+            #endregion
+
             Game.OnTick += Game_OnTick;
         }
 
@@ -658,49 +669,69 @@ namespace AutoSpellUp
         {
             try
             {
+                if (ObjectManager.Player.Level == 18)
+                {
+                    return;
+                }
+
                 var qL = Player.Spellbook.GetSpell(SpellSlot.Q).Level + QOff;
                 var wL = Player.Spellbook.GetSpell(SpellSlot.W).Level + WOff;
                 var eL = Player.Spellbook.GetSpell(SpellSlot.E).Level + EOff;
                 var rL = Player.Spellbook.GetSpell(SpellSlot.R).Level + ROff;
 
-                if (qL + wL + eL + rL >= ObjectManager.Player.Level)
+                Level = new[] {0, 0, 0, 0};
+
+                for (var i = 1; i <= ObjectManager.Player.Level; i++)
                 {
-                    return;
+                    switch (AbilitySequence[i - 1])
+                    {
+                        case 1:
+                            Level[0] += 1;
+                            break;
+                        case 2:
+                            Level[1] += 1;
+                            break;
+                        case 3:
+                            Level[2] += 1;
+                            break;
+                        case 4:
+                            Level[3] += 1;
+                            break;
+                    }
                 }
 
-                var level = new[] { 0, 0, 0, 0 };
-
-                for (var i = 0; i < ObjectManager.Player.Level; i++)
+                if (qL < Level[0])
                 {
-                    level[AbilitySequence[i] - 1] += 1;
+                    LevelUp(SpellSlot.Q);
                 }
 
-                EloBuddy.SDK.Core.DelayAction(() =>
+                if (wL < Level[1])
                 {
-                    if (qL <= level[0]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.Q);
-                }, new Random().Next(1000));
+                    LevelUp(SpellSlot.W);
+                }
 
-                EloBuddy.SDK.Core.DelayAction(() =>
+                if (eL < Level[2])
                 {
-                    if (wL <= level[1]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.W);
-                }, new Random().Next(1000));
-
-                EloBuddy.SDK.Core.DelayAction(() =>
+                    LevelUp(SpellSlot.E);
+                }
+                
+                if (rL < Level[3])
                 {
-                    if (eL <= level[2]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.E);
-
-                }, new Random().Next(1000));
-
-                EloBuddy.SDK.Core.DelayAction(() =>
-                {
-                    if (rL <= level[3]) ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.R);
-
-                }, new Random().Next(1000));
+                    LevelUp(SpellSlot.R);
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public static void LevelUp(SpellSlot slot)
+        {
+            EloBuddy.SDK.Core.DelayAction(() =>
+            {
+                Player.Spellbook.LevelSpell(slot);
+            }, new Random().Next(0, Delay));
         }
     }
 }
