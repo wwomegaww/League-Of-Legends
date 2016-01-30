@@ -280,7 +280,7 @@ namespace AutoSpellUp
                     }
                     break;
                 case "Leblanc":
-                    AbilitySequence = new[] { 1, 2, 3, 1, 1, 4, 1, 2, 1, 3, 4, 3, 3, 3, 2, 4, 2, 2 };
+                    AbilitySequence = new[] { 2, 1, 3, 2, 2, 4, 2, 1, 2, 1, 4, 1, 1, 3, 3, 4, 3, 3 };
                     break;
                 case "LeeSin":
                     if (smite != null && smite.Slot != SpellSlot.Unknown)
@@ -669,6 +669,13 @@ namespace AutoSpellUp
         {
             try
             {
+                /* Debug
+                Chat.Print("Q Array: " + Level[0]);
+                Chat.Print("W Array: " + Level[1]);
+                Chat.Print("E Array: " + Level[2]);
+                Chat.Print("R Array: " + Level[3]);
+                */
+
                 if (ObjectManager.Player.Level == 18)
                 {
                     return;
