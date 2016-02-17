@@ -247,16 +247,7 @@ namespace AutoSpellUp
                     AbilitySequence = new[] { 3, 1, 3, 2, 3, 4, 1, 3, 3, 1, 4, 1, 1, 2, 2, 4, 2, 2 };
                     break;
                 case "Kayle":
-                    if (smite != null && smite.Slot != SpellSlot.Unknown)
-                    {
-                        AbilitySequence = new[] { 3, 1, 2, 1, 1, 4, 1, 3, 1, 3, 4, 3, 3, 2, 2, 4, 2, 2 };
-                        Tipo = " Jungler";
-                    }
-                    else
-                    {
-                        AbilitySequence = new[] { 1, 3, 2, 1, 1, 4, 1, 3, 1, 3, 4, 3, 2, 3, 2, 4, 2, 2 };
-                        Tipo = " Lane";
-                    }
+                    AbilitySequence = new[] { 3, 1, 2, 3, 3, 4, 3, 1, 3, 1, 4, 1, 1, 2, 2, 4, 2, 2 };
                     break;
                 case "Kennen":
                     AbilitySequence = new[] { 2, 1, 3, 2, 2, 4, 2, 1, 2, 1, 4, 1, 1, 3, 3, 4, 3, 3 };
@@ -551,16 +542,8 @@ namespace AutoSpellUp
                     AbilitySequence = new[] { 3, 2, 1, 3, 3, 4, 3, 1, 3, 1, 4, 1, 1, 2, 2, 4, 2, 2 };
                     break;
                 case "Udyr":
-                    if (smite != null && smite.Slot != SpellSlot.Unknown)
-                    {
-                        AbilitySequence = new[] { 4, 1, 3, 4, 4, 3, 4, 3, 4, 3, 3, 1, 1, 1, 1, 2, 2, 2 };
-                        Tipo = " Jungler";
-                    }
-                    else
-                    {
-                        AbilitySequence = new[] { 1, 2, 3, 1, 1, 3, 1, 2, 1, 2, 3, 2, 3, 3, 2, 4, 4, 4 };
-                        Tipo = " Lane";
-                    }
+                    AbilitySequence = new[] { 4, 2, 3, 4, 4, 1, 4, 2, 4, 2, 2, 2, 3, 3, 3, 3, 1, 1 };
+                    Tipo = " Jungler";
                     break;
                 case "Urgot":
                     AbilitySequence = new[] { 3, 1, 2, 1, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
@@ -675,11 +658,6 @@ namespace AutoSpellUp
                 Chat.Print("E Array: " + Level[2]);
                 Chat.Print("R Array: " + Level[3]);
                 */
-
-                if (ObjectManager.Player.Level == 18)
-                {
-                    return;
-                }
 
                 var qL = Player.Spellbook.GetSpell(SpellSlot.Q).Level + QOff;
                 var wL = Player.Spellbook.GetSpell(SpellSlot.W).Level + WOff;
