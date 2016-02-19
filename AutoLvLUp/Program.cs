@@ -226,6 +226,9 @@ namespace AutoSpellUp
                 case "Jayce":
                     AbilitySequence = new[] { 1, 3, 2, 1, 1, 2, 1, 3, 1, 3, 1, 3, 3, 2, 2, 3, 2, 2 };
                     ROff = -1;
+                    break;                
+                case "Jhin":
+                    AbilitySequence = new[] { 1, 2, 1, 3, 1, 4, 1, 2, 1, 3, 4, 2, 2, 2, 3, 4, 3, 3 };
                     break;
                 case "Jinx":
                     AbilitySequence = new[] { 1, 3, 2, 1, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
@@ -405,7 +408,7 @@ namespace AutoSpellUp
                     }
                     else
                     {
-                        AbilitySequence = new[] { 1, 3, 2, 1, 1, 4, 1, 3, 1, 3, 4, 3, 3, 2, 2, 4, 2, 2 };
+                        AbilitySequence = new[] { 1, 2, 3, 1, 1, 4, 1, 3, 1, 3, 4, 3, 3, 2, 2, 4, 2, 2 };
                         Tipo = " Lane";
                     }
                     break;
